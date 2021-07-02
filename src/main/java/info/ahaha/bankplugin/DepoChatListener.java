@@ -22,21 +22,27 @@ public class DepoChatListener implements Listener {
                 playerlist.remove(e.getPlayer().getUniqueId().toString());
                 e.setCancelled(true);
                 HandlerList.unregisterAll(this);
-
                 return;
             }
         }
         if (getEconomy().getBalance(e.getPlayer()) < Double.parseDouble(e.getMessage())) {
             e.getPlayer().sendMessage(ChatColor.RED + "所持金が足りません");
+            playerlist.remove(e.getPlayer().getUniqueId().toString());
+            e.setCancelled(true);
+            HandlerList.unregisterAll(this);
             return;
+
         } else {
             BankPlugin.getEconomy().withdrawPlayer(e.getPlayer(), Double.parseDouble(e.getMessage()));
-            BankPlugin.getEconomy().bankDeposit(e.getPlayer().getUniqueId().toString(), Double.parseDouble(e.getMessage()));
-            e.getPlayer().sendMessage(String.valueOf(Double.parseDouble(e.getMessage())));
-            e.getPlayer().sendMessage(String.valueOf(getEconomy().bankBalance(e.getPlayer().getUniqueId().toString()).amount));
-            e.getPlayer().sendMessage(String.valueOf(getEconomy().bankBalance(e.getPlayer().getUniqueId().toString()).balance));
-            e.getPlayer().sendMessage(String.valueOf(getEconomy().bankBalance(e.getPlayer().getUniqueId().toString()).errorMessage));
+            Bank.depositBank(e.getPlayer().getUniqueId(), Double.parseDouble(e.getMessage()));
+
             e.getPlayer().sendMessage(ChatColor.GOLD + e.getMessage() + " Coin" + ChatColor.GREEN + " 預けました!");
+            e.getPlayer().sendMessage(ChatColor.GRAY+"--------------------------------");
+            e.getPlayer().sendMessage("");
+            e.getPlayer().sendMessage(ChatColor.GREEN +"残高 : "+ChatColor.GOLD + Bank.balanceBank(e.getPlayer().getUniqueId()) + " Coin");
+            e.getPlayer().sendMessage(ChatColor.GREEN +"所持金 : "+ChatColor.GOLD + BankPlugin.getEconomy().getBalance(e.getPlayer()) + " Coin");
+            e.getPlayer().sendMessage("");
+            e.getPlayer().sendMessage(ChatColor.GRAY+"--------------------------------");
         }
         playerlist.remove(e.getPlayer().getUniqueId().toString());
         e.setCancelled(true);

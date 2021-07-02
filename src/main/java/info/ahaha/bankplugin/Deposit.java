@@ -46,7 +46,7 @@ public class Deposit extends Runs implements abstract_GUI_Item {
         Lore.add(ChatColor.YELLOW + String.valueOf(BankPlugin.getEconomy().getBalance(player))+" Coin");
        Lore.add(" ");
         Lore.add(ChatColor.GRAY + "- " + ChatColor.GREEN + "残高");
-        Lore.add(ChatColor.YELLOW + String.valueOf(BankPlugin.getEconomy().bankBalance(player.getUniqueId().toString()).balance)+" Coin");
+        Lore.add(ChatColor.YELLOW + String.valueOf(Bank.balanceBank(player.getUniqueId()))+" Coin");
 
 
         meta.setLore(Lore);

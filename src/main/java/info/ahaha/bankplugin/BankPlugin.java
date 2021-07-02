@@ -4,10 +4,16 @@ import info.ahaha.guiapi.GUI;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,23 +26,36 @@ public final class BankPlugin extends JavaPlugin {
     private static Permission perms = null;
     private static Chat chat = null;
     static GUI bankgui;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         thisPlugin = this;
+
+        Path path = Paths.get("plugins/BankPlugin/");
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectory(path);//Make hwhw
+            } catch (IOException e) {
+                getLogger().info(e.toString());
+            }
+        }
+        SaveAndLoad.Load();
+
         if (!setupEconomy()) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        bankgui = new GUI(InventoryType.CHEST,"銀行");
+        bankgui = new GUI(InventoryType.CHEST, "銀行");
 
 
         setupPermissions();
         setupChat();
-        getServer().getPluginManager().registerEvents(new BankNPCListener(),thisPlugin);
+        getServer().getPluginManager().registerEvents(new BankNPCListener(), thisPlugin);
     }
+
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -73,8 +92,10 @@ public final class BankPlugin extends JavaPlugin {
     public static Chat getChat() {
         return chat;
     }
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        SaveAndLoad.Save();
     }
 }
