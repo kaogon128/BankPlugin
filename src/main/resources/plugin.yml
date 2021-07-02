@@ -1,0 +1,4 @@
+name: BankPlugin
+version: ${project.version}
+main: info.ahaha.bankplugin.BankPlugin
+api-version: 1.16
